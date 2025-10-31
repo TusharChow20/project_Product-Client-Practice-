@@ -6,10 +6,9 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-200/50 shadow-sm">
+    <nav className=" top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-200/50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Logo */}
           <div className="flex items-center space-x-2 cursor-pointer group">
             <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-blue-500 rounded-xl flex items-center justify-center transform transition-transform group-hover:scale-105">
               <span className="text-white font-bold text-xl">D</span>
@@ -18,8 +17,6 @@ export default function Navbar() {
               Deal-Product
             </span>
           </div>
-
-          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             <NavLink
               to="/"
@@ -29,36 +26,34 @@ export default function Navbar() {
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-purple-600 transition-all group-hover:w-full"></span>
             </NavLink>
             <NavLink
-              to="/all-products"
+              to="/allProducts"
               className="text-gray-700 hover:text-purple-600 transition-colors font-medium relative group"
             >
               All Products
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-purple-600 transition-all group-hover:w-full"></span>
             </NavLink>
             <NavLink
-              to="/my-products"
+              to="/myProducts"
               className="text-gray-700 hover:text-purple-600 transition-colors font-medium relative group"
             >
               My Products
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-purple-600 transition-all group-hover:w-full"></span>
             </NavLink>
             <NavLink
-              to="/my-bids"
+              to="/myBids"
               className="text-gray-700 hover:text-purple-600 transition-colors font-medium relative group"
             >
               My Bids
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-purple-600 transition-all group-hover:w-full"></span>
             </NavLink>
             <NavLink
-              to="/create-product"
+              to="/createProduct"
               className="text-gray-700 hover:text-purple-600 transition-colors font-medium relative group"
             >
               Create Product
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-purple-600 transition-all group-hover:w-full"></span>
             </NavLink>
           </div>
-
-          {/* Right Actions */}
           <div className="hidden md:flex items-center space-x-4">
             <button className="border border-purple-600 text-purple-600 px-6 py-2 rounded-lg font-semibold hover:bg-purple-50 transition-all">
               Login
@@ -67,8 +62,6 @@ export default function Navbar() {
               Register
             </button>
           </div>
-
-          {/* Mobile Menu Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
@@ -80,8 +73,6 @@ export default function Navbar() {
             )}
           </button>
         </div>
-
-        {/* Mobile Menu */}
         {isOpen && (
           <div className="md:hidden py-4 border-t border-gray-200/50 animate-fadeIn">
             <div className="flex flex-col space-y-4">
@@ -92,7 +83,7 @@ export default function Navbar() {
                 Home
               </NavLink>
               <NavLink
-                to="/all-products"
+                to="/allProducts"
                 className="text-gray-700 hover:text-purple-600 transition-colors font-medium px-4 py-2 hover:bg-gray-50 rounded-lg"
               >
                 All Products
