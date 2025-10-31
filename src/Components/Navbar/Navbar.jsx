@@ -1,8 +1,10 @@
-import { useState } from "react";
-import { NavLink } from "react-router";
+import { use, useState } from "react";
+import { Link, NavLink } from "react-router";
 import { Menu, X, Search, Bell, User } from "lucide-react";
+import { AuthContext } from "../../Provider/AuthContext";
 
 export default function Navbar() {
+  const { user } = use(AuthContext);
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -32,20 +34,24 @@ export default function Navbar() {
               All Products
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-purple-600 transition-all group-hover:w-full"></span>
             </NavLink>
-            <NavLink
-              to="/myProducts"
-              className="text-gray-700 hover:text-purple-600 transition-colors font-medium relative group"
-            >
-              My Products
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-purple-600 transition-all group-hover:w-full"></span>
-            </NavLink>
-            <NavLink
-              to="/myBids"
-              className="text-gray-700 hover:text-purple-600 transition-colors font-medium relative group"
-            >
-              My Bids
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-purple-600 transition-all group-hover:w-full"></span>
-            </NavLink>
+            {user && (
+              <>
+                <NavLink
+                  to="/myProducts"
+                  className="text-gray-700 hover:text-purple-600 transition-colors font-medium relative group"
+                >
+                  My Products
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-purple-600 transition-all group-hover:w-full"></span>
+                </NavLink>
+                <NavLink
+                  to="/myBids"
+                  className="text-gray-700 hover:text-purple-600 transition-colors font-medium relative group"
+                >
+                  My Bids
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-purple-600 transition-all group-hover:w-full"></span>
+                </NavLink>
+              </>
+            )}
             <NavLink
               to="/createProduct"
               className="text-gray-700 hover:text-purple-600 transition-colors font-medium relative group"
@@ -54,13 +60,25 @@ export default function Navbar() {
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-purple-600 transition-all group-hover:w-full"></span>
             </NavLink>
           </div>
-          <div className="hidden md:flex items-center space-x-4">
-            <button className="border border-purple-600 text-purple-600 px-6 py-2 rounded-lg font-semibold hover:bg-purple-50 transition-all">
-              Login
-            </button>
-            <button className="bg-purple-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-purple-700 transition-all">
-              Register
-            </button>
+          <div>
+            {user ? (
+              <button className="btn">Sign Out</button>
+            ) : (
+              <div className="hidden md:flex items-center space-x-4">
+                <Link
+                  to={"/login"}
+                  className="border border-purple-600 text-purple-600 px-6 py-2 rounded-lg font-semibold hover:bg-purple-50 transition-all"
+                >
+                  Login
+                </Link>
+                <Link
+                  to={"/register"}
+                  className="bg-purple-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-purple-700 transition-all"
+                >
+                  Register
+                </Link>
+              </div>
+            )}
           </div>
           <button
             onClick={() => setIsOpen(!isOpen)}
