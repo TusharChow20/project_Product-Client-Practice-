@@ -4,9 +4,12 @@ import { Menu, X, Search, Bell, User } from "lucide-react";
 import { AuthContext } from "../../Provider/AuthContext";
 
 export default function Navbar() {
-  const { user } = use(AuthContext);
+  const { user, logOut } = use(AuthContext);
   const [isOpen, setIsOpen] = useState(false);
 
+  const handleSignOut = () => {
+    logOut().then().catch();
+  };
   return (
     <nav className=" top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-200/50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -62,7 +65,9 @@ export default function Navbar() {
           </div>
           <div>
             {user ? (
-              <button className="btn">Sign Out</button>
+              <button onClick={handleSignOut} className="btn">
+                Sign Out
+              </button>
             ) : (
               <div className="hidden md:flex items-center space-x-4">
                 <Link
