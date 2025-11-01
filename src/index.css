@@ -2,9 +2,30 @@
 @plugin "daisyui" {
   themes: light --default;
 }
-@plugin "daisyui/theme" {
+@@plugin "daisyui/theme" {
   name: "light";
   default: true;
-  --color-primary: blue;
-  --color-secondary: teal;
+  --color-primary: #c084fc; /* fallback solid color */
+  --color-secondary: #a78bfa;
+}
+:root {
+  --color-primary-gradient: linear-gradient(to right, #6525a5, #9a6ace);
+}
+.btn-primary,
+.bg-primary,
+.border-primary {
+  background: var(--color-primary-gradient) !important;
+  color: white !important;
+  border: none !important;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(to right, #b794f4, #c084fc);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(192, 132, 252, 0.4);
+}
+.text-primary {
+  background: linear-gradient(to right, #230e46, #8d40db, #090011);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }

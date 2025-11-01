@@ -65,7 +65,7 @@ export default function Navbar() {
           </div>
           <div>
             {user ? (
-              <button onClick={handleSignOut} className="btn">
+              <button className="btn btn-primary" onClick={handleSignOut}>
                 Sign Out
               </button>
             ) : (
