@@ -44,14 +44,14 @@ const Product = ({ product }) => {
             ) : (
               <>
                 <h1 className="text-lg font-bold text-gray-900">
-                  Price: ${price_min} -${price_max}
+                  Price: {price_min} tk. -{price_max} tk.
                 </h1>
               </>
             )}
           </div>
           <Link
             to={`/productDetails/${_id}`}
-            className="btn flex items-center gap-1.5 bg-blue-600 text-white px-3 py-2 rounded-lg text-xs font-medium hover:bg-blue-700 transition-all duration-300 active:scale-95 transform shadow-md hover:shadow-lg"
+            className="btn btn-primary flex items-center gap-1.5 bg-blue-600 text-white px-3 py-2 rounded-lg text-xs font-medium hover:bg-blue-700 transition-all duration-300 active:scale-95 transform shadow-md hover:shadow-lg"
           >
             <ShoppingCart size={14} />
             <span className="hidden sm:inline">Add</span>

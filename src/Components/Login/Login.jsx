@@ -1,8 +1,10 @@
-import React from "react";
+import React, { use } from "react";
 import { useState } from "react";
 import { Link } from "react-router";
 import { Mail, Lock, User, Eye, EyeOff, Chrome } from "lucide-react";
+import { AuthContext } from "../../Provider/AuthContext";
 const Login = () => {
+  const { signInWithGoogle } = use(AuthContext);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -15,7 +17,27 @@ const Login = () => {
   };
 
   const handleGoogleSignIn = () => {
-    console.log("Google Sign In");
+    signInWithGoogle()
+      .then((result) => {
+        console.log(result.user);
+        const newUser = {
+          name: result.user.displayName,
+          email: result.user.email,
+          image: result.user.photoURL,
+        };
+        fetch("http://localhost:3000/users", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(newUser),
+        })
+          .then((res) => res.json())
+          .then((data) => console.log("data after user save", data));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50 flex items-center justify-center p-4">
