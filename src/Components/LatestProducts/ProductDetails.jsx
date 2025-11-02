@@ -114,8 +114,7 @@ const ProductDetails = () => {
                   Price starts from
                 </p>
                 <p className="text-2xl sm:text-3xl font-bold text-green-600">
-                  {product.price_min.toLocaleString()} tk. -{" "}
-                  {product.price_max.toLocaleString()} tk.
+                  {product?.price_min} tk. - {product?.price_max} tk.
                 </p>
               </div>
               <div className="bg-white p-4 sm:p-6 rounded-lg border border-gray-200">
@@ -153,7 +152,7 @@ const ProductDetails = () => {
                       {product.seller_name}
                     </p>
                     <p className="text-xs sm:text-sm text-gray-500 truncate">
-                      ({product.id.substring(0, 8)}...)
+                      ({product?.id?.substring(0, 8)}...)
                     </p>
                   </div>
                 </div>
