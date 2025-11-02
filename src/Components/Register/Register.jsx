@@ -52,22 +52,20 @@ const Register = () => {
       return;
     }
     console.log("Signup:", formData);
-    createUser(email, password).then(res=>{
+    createUser(email, password).then((res) => {
       const newUser = {
         name: name,
-        email:email,
-        image: 'blank'
+        email: email,
+        image: "blank",
       };
-      fetch("http://localhost:3000/users",{
-        method:'POST',
-        headers:{
-          "content-type": "application/json"
+      fetch("http://localhost:3000/users", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
         },
-        body: JSON.stringify(newUser)
-      }).then(res=> res.json)
-
+        body: JSON.stringify(newUser),
+      }).then((res) => res.json);
     });
-    
   };
 
   const handleGoogleSignIn = () => {
