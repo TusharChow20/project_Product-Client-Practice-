@@ -30,7 +30,7 @@ const ProductDetails = () => {
     const newBid = {
       product: product.id,
       buyer_email: email,
-      bid_price: price,
+      bid_price: parseFloat(price),
     };
 
     fetch("http://localhost:3000/BidData", {
@@ -39,7 +39,25 @@ const ProductDetails = () => {
         "content-type": "application/json",
       },
       body: JSON.stringify(newBid),
-    }).then((res) => res.json());
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.insertedId) {
+          alert("Bid submitted successfully!");
+          setIsModalOpen(false);
+          setFormData({
+            buyerImage: "",
+            offerPrice: "",
+            contactInfo: "",
+          });
+        } else {
+          alert("Failed to submit bid. Please try again.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error submitting bid:", error);
+        alert("An error occurred while submitting your bid.");
+      });
   };
 
   const getStatusColor = () => {
@@ -299,8 +317,8 @@ const ProductDetails = () => {
                       <input
                         type="text"
                         value={user?.displayName || user?.name || ""}
-                        readOnly
-                        className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-md bg-gray-50 text-gray-600 cursor-not-allowed"
+                        className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-md bg-gray-50 text-gray-600 "
+                        required
                       />
                     </div>
                     <div>
