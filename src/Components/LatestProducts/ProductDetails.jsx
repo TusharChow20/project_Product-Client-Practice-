@@ -1,4 +1,4 @@
-import React, { use, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { Link, useLoaderData, useNavigate } from "react-router";
 import {
   ArrowLeft,
@@ -13,6 +13,7 @@ import {
 import { AuthContext } from "../../Provider/AuthContext";
 
 const ProductDetails = () => {
+  const [bids, setBids] = useState([]);
   const product = useLoaderData();
   const navigate = useNavigate();
   const { user } = use(AuthContext);
@@ -22,15 +23,26 @@ const ProductDetails = () => {
     offerPrice: "",
     contactInfo: "",
   });
+  // console.log(product.id);
+
+  useEffect(() => {
+    fetch(`http://localhost:3000/products/bids/${product.id}`)
+      .then((res) => res.json())
+      .then((data) => setBids(data));
+  }, [product.id]);
   const handleBids = (e) => {
     e.preventDefault();
+    const name = e.target.name.value;
     const email = e.target.email.value;
     const price = e.target.price.value;
     // console.log(product.id, price, email);
     const newBid = {
       product: product.id,
+      buyer_name: name,
       buyer_email: email,
+      buyer_image: user?.photoURL,
       bid_price: parseFloat(price),
+      status: "Pending",
     };
 
     fetch("http://localhost:3000/BidData", {
@@ -50,6 +62,10 @@ const ProductDetails = () => {
             offerPrice: "",
             contactInfo: "",
           });
+          newBid._id = data.insertedId;
+          const newBids = [...bids, newBid];
+          newBids.sort((a, b) => b.bid_price - a.bid_price);
+          setBids(newBids);
         } else {
           alert("Failed to submit bid. Please try again.");
         }
@@ -316,6 +332,7 @@ const ProductDetails = () => {
                       </label>
                       <input
                         type="text"
+                        name="name"
                         value={user?.displayName || user?.name || ""}
                         className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-md bg-gray-50 text-gray-600 "
                         required
@@ -404,7 +421,59 @@ const ProductDetails = () => {
       {/* //bid section  */}
 
       <div className="px-15">
-        <h1 className="text-2xl font-bold">Bids For This Product: </h1>
+        <h1 className="text-2xl font-bold">
+          Bids For This Product: {bids.length}{" "}
+        </h1>
+        <div className="overflow-x-auto">
+          <table className="table">
+            {/* head */}
+            <thead>
+              <tr>
+                <th>
+                  <label>
+                    <input type="checkbox" className="checkbox" />
+                  </label>
+                </th>
+                <th>Buyer Name</th>
+                <th>Buyer Email</th>
+                <th>Bid Price</th>
+                <th>Actions</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {/* row 1 */}
+              {bids.map((bid, index) => (
+                <tr>
+                  <th>{index + 1}</th>
+                  <td>
+                    <div className="flex items-center gap-3">
+                      <div className="avatar">
+                        <div className="mask mask-squircle h-12 w-12">
+                          <img
+                            src="https://img.daisyui.com/images/profile/demo/2@94.webp"
+                            alt="Avatar Tailwind CSS Component"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    {bid.buyer_name}
+                    <br />
+                    <span className="badge badge-ghost badge-sm">
+                      {bid.buyer_email}
+                    </span>
+                  </td>
+                  <td>{bid.bid_price}</td>
+                  <th>
+                    <button className="btn btn-ghost btn-xs">details</button>
+                  </th>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
