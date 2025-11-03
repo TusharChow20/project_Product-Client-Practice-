@@ -9,54 +9,78 @@ import {
   Calendar,
   Tag,
   X,
-  LucideDelete,
+  Trash2,
 } from "lucide-react";
 import { AuthContext } from "../../Provider/AuthContext";
+
 const ProductDetails = () => {
   const [bids, setBids] = useState([]);
   const product = useLoaderData();
   const navigate = useNavigate();
   const { user } = use(AuthContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [bidToDelete, setBidToDelete] = useState(null);
   const [formData, setFormData] = useState({
     buyerImage: "",
     offerPrice: "",
     contactInfo: "",
   });
-  // console.log(product.id);
-  const handleDeleteBid = (id) => {
-    <div role="alert" className="alert alert-vertical sm:alert-horizontal">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        className="stroke-info h-6 w-6 shrink-0"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-        ></path>
-      </svg>
-      <span>Are You Sure?</span>
-      <div>
-        <button className="btn btn-sm">Deny</button>
-        <button className="btn btn-sm btn-primary">Accept</button>
-      </div>
-    </div>;
-  };
+
   useEffect(() => {
     fetch(`http://localhost:3000/products/bids/${product.id}`)
       .then((res) => res.json())
       .then((data) => setBids(data));
   }, [product.id]);
+
+  const handleDeleteBid = (id, bidEmail) => {
+    // Check if user is logged in and if the bid belongs to them
+    if (!user) {
+      alert("Please log in to delete bids");
+      return;
+    }
+
+    if (user.email !== bidEmail) {
+      alert("You can only delete your own bids");
+      return;
+    }
+
+    setBidToDelete(id);
+    setIsDeleteModalOpen(true);
+  };
+
+  const confirmDelete = () => {
+    fetch(`http://localhost:3000/BidData/${bidToDelete}`, {
+      method: "DELETE",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.deletedCount > 0) {
+          alert("Bid deleted successfully!");
+          setBids(bids.filter((bid) => bid._id !== bidToDelete));
+          setIsDeleteModalOpen(false);
+          setBidToDelete(null);
+        } else {
+          alert("Failed to delete bid.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error deleting bid:", error);
+        alert("An error occurred while deleting the bid.");
+      });
+  };
+
+  const cancelDelete = () => {
+    setIsDeleteModalOpen(false);
+    setBidToDelete(null);
+  };
+
   const handleBids = (e) => {
     e.preventDefault();
     const name = e.target.name.value;
     const email = e.target.email.value;
     const price = e.target.price.value;
-    // console.log(product.id, price, email);
+
     const newBid = {
       product: product.id,
       buyer_name: name,
@@ -133,17 +157,6 @@ const ProductDetails = () => {
       [name]: value,
     }));
   };
-
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   console.log("Bid submitted:", formData);
-  //   setIsModalOpen(false);
-  //   setFormData({
-  //     buyerImage: "",
-  //     offerPrice: "",
-  //     contactInfo: "",
-  //   });
-  // };
 
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -323,7 +336,7 @@ const ProductDetails = () => {
           </div>
         </div>
 
-        {/* Modal */}
+        {/* Bid Modal */}
         {isModalOpen && (
           <form
             onSubmit={handleBids}
@@ -355,7 +368,7 @@ const ProductDetails = () => {
                         type="text"
                         name="name"
                         value={user?.displayName || user?.name || ""}
-                        className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-md bg-gray-50 text-gray-600 "
+                        className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-md bg-gray-50 text-gray-600"
                         required
                       />
                     </div>
@@ -427,7 +440,6 @@ const ProductDetails = () => {
                     </button>
                     <button
                       type="submit"
-                      // onClick={handleSubmit}
                       className="w-full sm:flex-1 px-4 py-2.5 sm:py-2 text-sm sm:text-base bg-purple-600 text-white rounded-md hover:bg-purple-700 font-medium transition-colors"
                     >
                       Submit Bid
@@ -438,67 +450,108 @@ const ProductDetails = () => {
             </div>
           </form>
         )}
-      </div>
-      {/* //bid section  */}
 
-      <div className="px-15">
-        <h1 className="text-2xl font-bold">
-          Bids For This Product: {bids.length}{" "}
+        {/* Delete Confirmation Modal */}
+        {isDeleteModalOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
+              <div className="flex items-center justify-center w-12 h-12 mx-auto bg-red-100 rounded-full mb-4">
+                <Trash2 className="w-6 h-6 text-red-600" />
+              </div>
+
+              <h3 className="text-lg font-semibold text-gray-900 text-center mb-2">
+                Delete Bid
+              </h3>
+
+              <p className="text-gray-600 text-center mb-6">
+                Are you sure you want to delete this bid? This action cannot be
+                undone.
+              </p>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={cancelDelete}
+                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 font-medium transition-colors"
+                >
+                  No, Cancel
+                </button>
+                <button
+                  onClick={confirmDelete}
+                  className="flex-1 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 font-medium transition-colors"
+                >
+                  Yes, Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Bids Section */}
+      <div className="px-4 sm:px-6 lg:px-8 pb-8">
+        <h1 className="text-2xl font-bold mb-4">
+          Bids For This Product: {bids.length}
         </h1>
         <div className="overflow-x-auto">
-          <table className="table">
-            {/* head */}
+          <table className="table w-full">
             <thead>
               <tr>
-                <th>
-                  <label>
-                    <input type="checkbox" className="checkbox" />
-                  </label>
-                </th>
-                <th>Buyer Name</th>
-                <th>Buyer Email</th>
+                <th>#</th>
+                <th>Buyer Info</th>
                 <th>Bid Price</th>
                 <th>Status</th>
                 <th>Actions</th>
-                <th></th>
               </tr>
             </thead>
             <tbody>
-              {/* row 1 */}
               {bids.map((bid, index) => (
-                <tr>
+                <tr key={bid._id}>
                   <td>{index + 1}</td>
                   <td>
                     <div className="flex items-center gap-3">
                       <div className="avatar">
                         <div className="mask mask-squircle h-12 w-12">
                           <img
-                            src="https://img.daisyui.com/images/profile/demo/2@94.webp"
-                            alt="Avatar Tailwind CSS Component"
+                            src={
+                              bid.buyer_image ||
+                              "https://img.daisyui.com/images/profile/demo/2@94.webp"
+                            }
+                            alt={bid.buyer_name}
                           />
+                        </div>
+                      </div>
+                      <div>
+                        <div className="font-bold">{bid.buyer_name}</div>
+                        <div className="text-sm opacity-50">
+                          {bid.buyer_email}
                         </div>
                       </div>
                     </div>
                   </td>
+                  <td className="font-semibold">{bid.bid_price} tk</td>
                   <td>
-                    {bid.buyer_name}
-                    <br />
-                    <span className="badge badge-ghost badge-sm">
-                      {bid.buyer_email}
-                    </span>
+                    <span className="badge badge-ghost">{bid.status}</span>
                   </td>
-                  <td>{bid.bid_price}</td>
                   <td>
-                    <div className="badge badge-a">{bid.status}</div>
-                  </td>
-                  <th>
                     <button
-                      onClick={() => handleDeleteBid(bid._id)}
-                      className="btn btn-ghost btn-xs"
+                      onClick={() => handleDeleteBid(bid._id, bid.buyer_email)}
+                      className={`btn btn-ghost btn-sm ${
+                        user && user.email === bid.buyer_email
+                          ? "text-red-600 hover:bg-red-50"
+                          : "text-gray-400 cursor-not-allowed"
+                      }`}
+                      disabled={!user || user.email !== bid.buyer_email}
+                      title={
+                        !user
+                          ? "Please log in to delete"
+                          : user.email !== bid.buyer_email
+                          ? "You can only delete your own bids"
+                          : "Delete this bid"
+                      }
                     >
-                      <LucideDelete></LucideDelete>
+                      <Trash2 size={16} />
                     </button>
-                  </th>
+                  </td>
                 </tr>
               ))}
             </tbody>
