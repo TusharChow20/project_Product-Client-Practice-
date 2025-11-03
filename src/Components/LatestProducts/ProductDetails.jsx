@@ -9,9 +9,9 @@ import {
   Calendar,
   Tag,
   X,
+  LucideDelete,
 } from "lucide-react";
 import { AuthContext } from "../../Provider/AuthContext";
-
 const ProductDetails = () => {
   const [bids, setBids] = useState([]);
   const product = useLoaderData();
@@ -24,7 +24,28 @@ const ProductDetails = () => {
     contactInfo: "",
   });
   // console.log(product.id);
-
+  const handleDeleteBid = (id) => {
+    <div role="alert" className="alert alert-vertical sm:alert-horizontal">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        className="stroke-info h-6 w-6 shrink-0"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+        ></path>
+      </svg>
+      <span>Are You Sure?</span>
+      <div>
+        <button className="btn btn-sm">Deny</button>
+        <button className="btn btn-sm btn-primary">Accept</button>
+      </div>
+    </div>;
+  };
   useEffect(() => {
     fetch(`http://localhost:3000/products/bids/${product.id}`)
       .then((res) => res.json())
@@ -437,6 +458,7 @@ const ProductDetails = () => {
                 <th>Buyer Name</th>
                 <th>Buyer Email</th>
                 <th>Bid Price</th>
+                <th>Status</th>
                 <th>Actions</th>
                 <th></th>
               </tr>
@@ -445,7 +467,7 @@ const ProductDetails = () => {
               {/* row 1 */}
               {bids.map((bid, index) => (
                 <tr>
-                  <th>{index + 1}</th>
+                  <td>{index + 1}</td>
                   <td>
                     <div className="flex items-center gap-3">
                       <div className="avatar">
@@ -466,8 +488,16 @@ const ProductDetails = () => {
                     </span>
                   </td>
                   <td>{bid.bid_price}</td>
+                  <td>
+                    <div className="badge badge-a">{bid.status}</div>
+                  </td>
                   <th>
-                    <button className="btn btn-ghost btn-xs">details</button>
+                    <button
+                      onClick={() => handleDeleteBid(bid._id)}
+                      className="btn btn-ghost btn-xs"
+                    >
+                      <LucideDelete></LucideDelete>
+                    </button>
                   </th>
                 </tr>
               ))}
