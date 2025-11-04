@@ -8,34 +8,22 @@ const MyBids = () => {
   const [loading, setLoading] = useState(true);
   //   const navigate = useNavigate();
   const { user } = use(AuthContext);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
   //   console.log(user.accessToken);
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [bidToDelete, setBidToDelete] = useState(null);
   useEffect(() => {
-    fetch(`http://localhost:3000/BidData?email=${user?.email}`, {
+    fetch(`http://localhost:3000/BidData?email=${user.email}`, {
       method: "GET",
       headers: {
         authorization: `Bearer ${user.accessToken}`,
       },
     })
       .then((res) => res.json())
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Failed to fetch bids");
-        }
-        return res.json();
-      })
       .then((data) => {
         // Ensure data is an array
         setBids(Array.isArray(data) ? data : []);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Error fetching bids:", err);
-        setError(err.message);
-        setBids([]); // Set empty array on error
         setLoading(false);
       });
   }, [user]);

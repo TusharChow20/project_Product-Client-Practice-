@@ -28,10 +28,14 @@ const ProductDetails = () => {
   });
 
   useEffect(() => {
-    fetch(`http://localhost:3000/products/bids/${product.id}`)
+    fetch(`http://localhost:3000/products/bids/${product.id}`, {
+      headers: {
+        authorization: `Bearer ${user.accessToken}`,
+      },
+    })
       .then((res) => res.json())
       .then((data) => setBids(data));
-  }, [product.id]);
+  }, [product.id, user]);
 
   const handleDeleteBid = (id, bidEmail) => {
     // Check if user is logged in and if the bid belongs to them
