@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import { ArrowLeft } from "lucide-react";
-import axios from "axios";
+
+import useAuth from "../../CustomHook/useAuth";
+import useAxiosSecure from "../../CustomHook/useAxiosSecure";
 
 export default function CreateProductForm() {
+  const axiosInstence = useAxiosSecure();
+  const { user } = useAuth();
   const [formData, setFormData] = useState({
     title: "",
     category: "",
@@ -52,8 +56,8 @@ export default function CreateProductForm() {
       sellerName,
       location,
     };
-    axios
-      .post("http://localhost:3000/products", newProduct)
+    axiosInstence
+      .post("/products", newProduct)
       .then((data) => console.log(data.data));
   };
 
@@ -226,10 +230,11 @@ export default function CreateProductForm() {
               <input
                 type="text"
                 name="sellerName"
-                value={formData.sellerName}
+                value={user?.name}
                 onChange={handleChange}
                 placeholder="e.g. Artisan Roasters"
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                // value={}
                 required
               />
             </div>
@@ -241,11 +246,11 @@ export default function CreateProductForm() {
               <input
                 type="email"
                 name="sellerEmail"
-                value={formData.sellerEmail}
+                value={user.email}
                 onChange={handleChange}
                 placeholder="lei31955@nirlord.com"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
-                required
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none cursor-not-allowed"
+                readOnly
               />
             </div>
           </div>
