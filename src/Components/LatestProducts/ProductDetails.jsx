@@ -12,6 +12,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { AuthContext } from "../../Provider/AuthContext";
+import axios from "axios";
 
 const ProductDetails = () => {
   const [bids, setBids] = useState([]);
@@ -28,13 +29,9 @@ const ProductDetails = () => {
   });
 
   useEffect(() => {
-    fetch(`http://localhost:3000/products/bids/${product.id}`, {
-      headers: {
-        authorization: `Bearer ${user.accessToken}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => setBids(data));
+    axios
+      .get(`http://localhost:3000/products/bids/${product.id}`)
+      .then((data) => console.log("afgter azisdf", data));
   }, [product.id, user]);
 
   const handleDeleteBid = (id, bidEmail) => {

@@ -53,16 +53,16 @@ export default function Navbar() {
                   My Bids
                   <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-purple-600 transition-all group-hover:w-full"></span>
                 </NavLink>
+                <NavLink
+                  to="/create"
+                  className="text-gray-700 hover:text-purple-600 transition-colors font-medium relative group"
+                >
+                  Create a Product
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-purple-600 transition-all group-hover:w-full"></span>
+                </NavLink>
               </>
             )}
-            <NavLink
-              to="/createProduct"
-              className="text-gray-700 hover:text-purple-600 transition-colors font-medium relative group"
-            >
-              Create Product
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-purple-600 transition-all group-hover:w-full"></span>
-            </NavLink>
-          </div>
+           </div>
           <div>
             {user ? (
               <button className="btn btn-primary" onClick={handleSignOut}>
