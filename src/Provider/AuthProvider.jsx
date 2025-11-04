@@ -45,7 +45,6 @@ const AuthProvider = ({ children }) => {
       setUser(currentUser);
 
       if (currentUser) {
-
         const loggedUser = { email: currentUser.email };
         fetch("http://localhost:3000/getToken", {
           method: "POST",
@@ -55,7 +54,7 @@ const AuthProvider = ({ children }) => {
           body: JSON.stringify(loggedUser),
         })
           .then((res) => res.json())
-          .then((data) => console.log(data));
+          .then((data) => localStorage.setItem("token", data.token));
       }
 
       setLoading(false);

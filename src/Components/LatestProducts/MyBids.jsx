@@ -14,10 +14,12 @@ const MyBids = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [bidToDelete, setBidToDelete] = useState(null);
   useEffect(() => {
+    console.log(user.email);
+
     fetch(`http://localhost:3000/BidData?email=${user.email}`, {
       method: "GET",
       headers: {
-        authorization: `Bearer ${user.accessToken}`,
+        authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     })
       .then((res) => res.json())
