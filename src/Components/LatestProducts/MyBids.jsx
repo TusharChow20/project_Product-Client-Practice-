@@ -16,12 +16,15 @@ const MyBids = () => {
   useEffect(() => {
     console.log(user.email);
 
-    fetch(`http://localhost:3000/BidData?email=${user.email}`, {
-      method: "GET",
-      headers: {
-        authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    })
+    fetch(
+      `https://deal-product-server.vercel.app/BidData?email=${user.email}`,
+      {
+        method: "GET",
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         // Ensure data is an array
@@ -46,7 +49,7 @@ const MyBids = () => {
   };
 
   const confirmDelete = () => {
-    fetch(`http://localhost:3000/BidData/${bidToDelete}`, {
+    fetch(`https://deal-product-server.vercel.app/BidData/${bidToDelete}`, {
       method: "DELETE",
     })
       .then((res) => res.json())

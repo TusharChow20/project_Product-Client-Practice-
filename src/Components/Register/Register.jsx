@@ -58,7 +58,7 @@ const Register = () => {
         email: email,
         image: "blank",
       };
-      fetch("http://localhost:3000/users", {
+      fetch("https://deal-product-server.vercel.app/users", {
         method: "POST",
         headers: {
           "content-type": "application/json",
@@ -77,7 +77,7 @@ const Register = () => {
           email: result.user.email,
           image: result.user.photoURL,
         };
-        fetch("http://localhost:3000/users", {
+        fetch("https://deal-product-server.vercel.app/users", {
           method: "POST",
           headers: {
             "content-type": "application/json",

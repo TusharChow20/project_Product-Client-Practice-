@@ -4,11 +4,11 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router";
 
 const instance = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: "https://deal-product-server.vercel.app",
 });
 const useAxiosSecure = () => {
-  const { user,logOut } = useAuth();
-  const navigate = useNavigate()
+  const { user, logOut } = useAuth();
+  const navigate = useNavigate();
   useEffect(() => {
     const reqInterceptor = instance.interceptors.request.use((config) => {
       console.log(config);
@@ -21,15 +21,18 @@ const useAxiosSecure = () => {
         return res;
       },
       (err) => {
-        if(err.status === 401 || err.status===403){
-          logOut().then(()=>{navigate('/login')})
+        if (err.status === 401 || err.status === 403) {
+          logOut().then(() => {
+            navigate("/login");
+          });
         }
-      },[user,logOut, navigate]
+      },
+      [user, logOut, navigate]
     );
     return () => {
       instance.interceptors.request.eject(reqInterceptor);
       instance.interceptors.response.eject(reqInterceptor);
     };
-  }, [user]);
+  }, [logOut, navigate, user]);
 };
 export default useAxiosSecure;

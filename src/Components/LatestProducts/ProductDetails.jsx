@@ -30,7 +30,7 @@ const ProductDetails = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/products/bids/${product.id}`)
+      .get(`https://deal-product-server.vercel.app/products/bids/${product.id}`)
       .then((data) => console.log("afgter azisdf", data));
   }, [product.id, user]);
 
@@ -51,7 +51,7 @@ const ProductDetails = () => {
   };
 
   const confirmDelete = () => {
-    fetch(`http://localhost:3000/BidData/${bidToDelete}`, {
+    fetch(`https://deal-product-server.vercel.app/BidData/${bidToDelete}`, {
       method: "DELETE",
     })
       .then((res) => res.json())
@@ -91,7 +91,7 @@ const ProductDetails = () => {
       status: "Pending",
     };
 
-    fetch("http://localhost:3000/BidData", {
+    fetch("https://deal-product-server.vercel.app/BidData", {
       method: "POST",
       headers: {
         "content-type": "application/json",
