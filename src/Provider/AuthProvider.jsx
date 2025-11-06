@@ -7,30 +7,72 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
+  RecaptchaVerifier,
 } from "firebase/auth";
 import { auth } from "../Firebase/firebase.config";
 
 const googleProvider = new GoogleAuthProvider();
+
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  console.log(user);
+  const [recaptchaVerifier, setRecaptchaVerifier] = useState(null);
 
-  const createUser = (email, password) => {
-    setLoading(true);
-    return createUserWithEmailAndPassword(auth, email, password);
+  // Initialize reCAPTCHA
+  const initializeRecaptcha = (containerId) => {
+    if (!recaptchaVerifier) {
+      const verifier = new RecaptchaVerifier(auth, containerId, {
+        size: 'invisible',
+        callback: (response) => {
+          console.log("reCAPTCHA solved");
+        },
+        'expired-callback': () => {
+          console.log("reCAPTCHA expired");
+        }
+      });
+      setRecaptchaVerifier(verifier);
+      return verifier;
+    }
+    return recaptchaVerifier;
   };
-  const logIn = (email, password) => {
-    return signInWithEmailAndPassword(auth, email, password);
+
+  const createUser = async (email, password) => {
+    setLoading(true);
+    try {
+      // Verify reCAPTCHA before creating user
+      if (recaptchaVerifier) {
+        await recaptchaVerifier.verify();
+      }
+      return await createUserWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      setLoading(false);
+      throw error;
+    }
+  };
+
+  const logIn = async (email, password) => {
+    setLoading(true);
+    try {
+      // Verify reCAPTCHA before login
+      if (recaptchaVerifier) {
+        await recaptchaVerifier.verify();
+      }
+      return await signInWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      setLoading(false);
+      throw error;
+    }
   };
 
   const signInWithGoogle = () => {
     setLoading(true);
     return signInWithPopup(auth, googleProvider);
   };
+
   const logOut = () => {
     return signOut(auth);
   };
+
   const authInfo = {
     createUser,
     logIn,
@@ -38,6 +80,7 @@ const AuthProvider = ({ children }) => {
     loading,
     signInWithGoogle,
     logOut,
+    initializeRecaptcha,
   };
 
   useEffect(() => {
@@ -63,6 +106,7 @@ const AuthProvider = ({ children }) => {
       unsubscribe();
     };
   }, []);
+
   return <AuthContext value={authInfo}>{children}</AuthContext>;
 };
 
