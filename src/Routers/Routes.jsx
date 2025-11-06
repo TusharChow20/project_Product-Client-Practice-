@@ -27,7 +27,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/myProducts",
-        Component: MyProducts,
+        element: (
+          <PrivateRoutes>
+            <MyProducts></MyProducts>
+          </PrivateRoutes>
+        ),
         loader: () => axios("https://deal-product-server.vercel.app/products"),
       },
       {

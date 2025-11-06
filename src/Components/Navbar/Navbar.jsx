@@ -10,8 +10,9 @@ export default function Navbar() {
   const handleSignOut = () => {
     logOut().then().catch();
   };
+
   return (
-    <nav className=" top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-200/50 shadow-sm">
+    <nav className="top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-200/50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-2 cursor-pointer group">
@@ -22,6 +23,7 @@ export default function Navbar() {
               Deal-Product
             </span>
           </div>
+
           <div className="hidden md:flex items-center space-x-8">
             <NavLink
               to="/"
@@ -62,14 +64,18 @@ export default function Navbar() {
                 </NavLink>
               </>
             )}
-           </div>
-          <div>
+          </div>
+
+          <div className="hidden md:block">
             {user ? (
-              <button className="btn btn-primary" onClick={handleSignOut}>
+              <button
+                className="bg-purple-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-purple-700 transition-all"
+                onClick={handleSignOut}
+              >
                 Sign Out
               </button>
             ) : (
-              <div className="hidden md:flex items-center space-x-4">
+              <div className="flex items-center space-x-4">
                 <Link
                   to={"/login"}
                   className="border border-purple-600 text-purple-600 px-6 py-2 rounded-lg font-semibold hover:bg-purple-50 transition-all"
@@ -85,6 +91,7 @@ export default function Navbar() {
               </div>
             )}
           </div>
+
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
@@ -96,6 +103,7 @@ export default function Navbar() {
             )}
           </button>
         </div>
+
         {isOpen && (
           <div className="md:hidden py-4 border-t border-gray-200/50 animate-fadeIn">
             <div className="flex flex-col space-y-4">
@@ -111,31 +119,53 @@ export default function Navbar() {
               >
                 All Products
               </NavLink>
-              <NavLink
-                to="/my-products"
-                className="text-gray-700 hover:text-purple-600 transition-colors font-medium px-4 py-2 hover:bg-gray-50 rounded-lg"
-              >
-                My Products
-              </NavLink>
-              <NavLink
-                to="/my-bids"
-                className="text-gray-700 hover:text-purple-600 transition-colors font-medium px-4 py-2 hover:bg-gray-50 rounded-lg"
-              >
-                My Bids
-              </NavLink>
-              <NavLink
-                to="/create-product"
-                className="text-gray-700 hover:text-purple-600 transition-colors font-medium px-4 py-2 hover:bg-gray-50 rounded-lg"
-              >
-                Create Product
-              </NavLink>
+              {user && (
+                <>
+                  <NavLink
+                    to="/myProducts"
+                    className="text-gray-700 hover:text-purple-600 transition-colors font-medium px-4 py-2 hover:bg-gray-50 rounded-lg"
+                  >
+                    My Products
+                  </NavLink>
+                  <NavLink
+                    to="/myBids"
+                    className="text-gray-700 hover:text-purple-600 transition-colors font-medium px-4 py-2 hover:bg-gray-50 rounded-lg"
+                  >
+                    My Bids
+                  </NavLink>
+                  <NavLink
+                    to="/create"
+                    className="text-gray-700 hover:text-purple-600 transition-colors font-medium px-4 py-2 hover:bg-gray-50 rounded-lg"
+                  >
+                    Create Product
+                  </NavLink>
+                </>
+              )}
+
               <div className="flex flex-col space-y-3 pt-4 border-t border-gray-200/50">
-                <button className="border border-purple-600 text-purple-600 px-6 py-2 rounded-lg font-semibold hover:bg-purple-50 transition-all mx-4">
-                  Login
-                </button>
-                <button className="bg-purple-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-purple-700 transition-all mx-4">
-                  Register
-                </button>
+                {user ? (
+                  <button
+                    className="bg-purple-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-purple-700 transition-all mx-4"
+                    onClick={handleSignOut}
+                  >
+                    Sign Out
+                  </button>
+                ) : (
+                  <>
+                    <Link
+                      to={"/login"}
+                      className="border border-purple-600 text-purple-600 px-6 py-2 rounded-lg font-semibold hover:bg-purple-50 transition-all mx-4 text-center"
+                    >
+                      Login
+                    </Link>
+                    <Link
+                      to={"/register"}
+                      className="bg-purple-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-purple-700 transition-all mx-4 text-center"
+                    >
+                      Register
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </div>
