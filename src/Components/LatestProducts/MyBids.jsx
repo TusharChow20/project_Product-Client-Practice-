@@ -6,6 +6,7 @@ import { Trash2 } from "lucide-react";
 const MyBids = () => {
   const [bids, setBids] = useState([]);
   const [loading, setLoading] = useState(true);
+
   //   const navigate = useNavigate();
   const { user } = use(AuthContext);
   const [error, setError] = useState("");

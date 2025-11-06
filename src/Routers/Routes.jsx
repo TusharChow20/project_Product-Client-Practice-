@@ -8,6 +8,7 @@ import ProductDetails from "../Components/LatestProducts/ProductDetails";
 import MyBids from "../Components/LatestProducts/MyBids";
 import PrivateRoutes from "./PrivateRoutes";
 import Create from "../Components/CreateAProduct/Create";
+import axios from "axios";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,7 @@ const router = createBrowserRouter([
       {
         path: "/allProducts",
         Component: AllPRoducts,
+        loader: () => axios("https://deal-product-server.vercel.app/products"),
       },
       {
         path: "/login",
