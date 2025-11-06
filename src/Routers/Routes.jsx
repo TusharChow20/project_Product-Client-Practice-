@@ -28,6 +28,7 @@ const router = createBrowserRouter([
       {
         path: "/myProducts",
         Component: MyProducts,
+        loader: () => axios("https://deal-product-server.vercel.app/products"),
       },
       {
         path: "/login",
